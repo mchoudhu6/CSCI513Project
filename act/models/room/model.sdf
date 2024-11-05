@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="room">
+    <static>true</static>
+    <link name="room_link">
+      <visual name="room_visual">
+        <geometry>
+          <mesh>
+            <uri>model://room/room.stl</uri>
+            <scale>0.03 0.03 0.03</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient> 
+          <diffuse>0.5 0.5 0.5 1</diffuse> 
+          <specular>0.1 0.1 0.1 1</specular> 
+          <emissive>0 0 0 1</emissive> 
+        </material>
+      </visual>
+      <collision name="room_collision">
+        <geometry>
+          <mesh>
+            <uri>model://room/room.stl</uri>
+            <scale>0.03 0.03 0.03</scale>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>
