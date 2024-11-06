@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="bed">
+    <static>true</static>
+    <link name="bed_link">
+      <visual name="bed_visual">
+        <geometry>
+          <mesh>
+            <uri>model://bed/bed.stl</uri>
+            <scale>0.03 0.03 0.03</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient> 
+          <diffuse>0.5 0.5 0.5 1</diffuse> 
+          <specular>0.1 0.1 0.1 1</specular> 
+          <emissive>0 0 0 1</emissive> 
+        </material>
+      </visual>
+      <collision name="bed_collision">
+        <geometry>
+          <mesh>
+            <uri>model://bed/bed.stl</uri>
+            <scale>0.03 0.03 0.03</scale>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>
