@@ -183,5 +183,53 @@
             <parent>chassis</parent>
             <child>caster</child>
         </joint>
+
+        <plugin
+            filename="gz-sim-diff-drive-system"
+            name="gz::sim::systems::DiffDrive">
+            <left_joint>left_wheel_joint</left_joint>
+            <right_joint>right_wheel_joint</right_joint>
+            <wheel_separation>0.26</wheel_separation>
+            <wheel_radius>0.1</wheel_radius>
+            <odom_publish_frequency>10</odom_publish_frequency>
+            <topic>cmd_vel</topic>
+        </plugin>
+        <!-- Moving Based on Key Press (WASD)-->
+        <plugin filename="gz-sim-triggered-publisher-system"
+                name="gz::sim::systems::TriggeredPublisher">
+            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+                <match field="data">87</match>
+            </input>
+            <output type="gz.msgs.Twist" topic="/cmd_vel">
+                linear: {x: 0.5}, angular: {z: 0.0}
+            </output>   
+        </plugin>
+        <plugin filename="gz-sim-triggered-publisher-system"
+                name="gz::sim::systems::TriggeredPublisher">
+            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+                <match field="data">83</match>
+            </input>
+            <output type="gz.msgs.Twist" topic="/cmd_vel">
+                linear: {x: -0.5}, angular: {z: 0.0}
+            </output> 
+        </plugin>
+        <plugin filename="gz-sim-triggered-publisher-system"
+                name="gz::sim::systems::TriggeredPublisher">
+            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+                <match field="data">65</match>
+            </input>
+            <output type="gz.msgs.Twist" topic="/cmd_vel">
+                linear: {x: 0.0}, angular: {z: 0.5}
+            </output>
+        </plugin>
+        <plugin filename="gz-sim-triggered-publisher-system"
+                name="gz::sim::systems::TriggeredPublisher">
+            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
+                <match field="data">68</match>
+            </input>
+            <output type="gz.msgs.Twist" topic="/cmd_vel">
+                linear: {x: 0.0}, angular: {z: -0.5}
+            </output>
+        </plugin>
     </model>
 </sdf>
