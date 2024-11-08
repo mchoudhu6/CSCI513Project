@@ -7,7 +7,7 @@
         <geometry>
           <mesh>
             <uri>model://table/table.stl</uri>
-            <scale>0.03 0.03 0.03</scale>
+            <scale>0.022 0.022 0.022</scale>
           </mesh>
         </geometry>
         <material>
@@ -19,7 +19,7 @@
         <geometry>
           <mesh>
             <uri>model://table/table.stl</uri>
-            <scale>0.03 0.03 0.03</scale>
+            <scale>0.022 0.022 0.022</scale>
           </mesh>
         </geometry>
       </collision>
