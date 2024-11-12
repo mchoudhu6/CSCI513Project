@@ -1,2 +1,0 @@
-Invoking command in '/home/super-rogatory/ros2_ws/src/build/act': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy CONDA_PROMPT_MODIFIER=(base) /usr/bin/cmake /home/super-rogatory/ros2_ws/src/act -DCMAKE_INSTALL_PREFIX=/home/super-rogatory/ros2_ws/src/install/act
-Invoked command in '/home/super-rogatory/ros2_ws/src/build/act' returned '1': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/jazzy CONDA_PROMPT_MODIFIER=(base) /usr/bin/cmake /home/super-rogatory/ros2_ws/src/act -DCMAKE_INSTALL_PREFIX=/home/super-rogatory/ros2_ws/src/install/act
