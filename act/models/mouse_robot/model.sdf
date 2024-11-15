@@ -1,30 +1,140 @@
 <?xml version="1.0" ?>
 <sdf version="1.8">
   <model name="act">
-    <static>true</static>
-    <link name="act_link">
+    <static>false</static>
+    <!-- Act body main link -->
+    <link name="chassis">
+      <pose>0 0 0.02 0 0 0</pose>
       <visual name="act_visual">
         <geometry>
           <mesh>
             <uri>model://mouse_robot/mouse_robot.stl</uri>
-            <scale>0.01 0.01 0.01</scale>
+            <scale>0.015 0.015 0.015</scale>
           </mesh>
         </geometry>
         <material>
-          <ambient>0.96 0.96 0.86 1</ambient>
-          <diffuse>0.96 0.96 0.86 1</diffuse>
-          <specular>0.1 0.1 0.1 1</specular> 
-          <emissive>0 0 0 1</emissive> 
+          <ambient>0 0 0 1</ambient>
+          <diffuse>0 0 0 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+          <emissive>0 0 0 1</emissive>
         </material>
+
       </visual>
       <collision name="act_collision">
         <geometry>
           <mesh>
             <uri>model://mouse_robot/mouse_robot.stl</uri>
-            <scale>0.01 0.01 0.01</scale>
+            <scale>0.015 0.015 0.015</scale>
           </mesh>
         </geometry>
       </collision>
     </link>
+
+    <!-- Left Wheel -->
+    <link name="left_wheel">
+      <pose relative_to="chassis">0.10 0.12 0 0 1.5707 0</pose>
+
+      <collision name="left_wheel_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius> 
+            <length>0.03</length>  
+          </cylinder>
+        </geometry>
+      </collision>
+      
+      <visual name="left_wheel_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.03</length> 
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+     <!-- Right Wheel -->
+    <link name="right_wheel">
+      <pose relative_to="chassis">-0.09 0.12 0 0 1.5707 0</pose>
+
+      <collision name="right_wheel_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius> 
+            <length>0.03</length>  
+          </cylinder>
+        </geometry>
+      </collision>
+      
+      <visual name="right_wheel_visual">
+        <geometry>
+          <cylinder>
+            <radius>0.08</radius>
+            <length>0.03</length> 
+          </cylinder>
+        </geometry>
+        <material>
+          <ambient>0.5 0.5 0.5 1</ambient>
+          <diffuse>0.5 0.5 0.5 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Caster Wheel -->
+    <link name="caster_wheel">
+      <pose relative_to="chassis">0 0 -0.06 0 0 0</pose>
+      <collision name="caster_wheel_collision">
+        <geometry>
+          <sphere>
+            <radius>0.02</radius>
+          </sphere>
+        </geometry>
+      </collision>
+      <visual name="caster_wheel_visual">
+        <geometry>
+          <sphere>
+            <radius>0.02</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <ambient>0.3 0.3 0.3 1</ambient>
+          <diffuse>0.3 0.3 0.3 1</diffuse>
+        </material>
+      </visual>
+    </link>
+
+    <!-- Left Wheel Joint -->
+    <joint name="left_wheel_joint" type="revolute">
+      <parent>chassis</parent>
+      <child>left_wheel</child>
+      <pose>0.10 0.12 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1000</lower>
+          <upper>1000</upper>
+        </limit>
+      </axis>
+    </joint>
+
+    <!-- Right Wheel Joint -->
+    <joint name="right_wheel_joint" type="revolute">
+      <parent>chassis</parent>
+      <child>right_wheel</child>
+      <pose>-0.09 0.12 0 0 0 0</pose>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1000</lower>
+          <upper>1000</upper>
+        </limit>
+      </axis>
+    </joint>
+    
   </model>
 </sdf>
+

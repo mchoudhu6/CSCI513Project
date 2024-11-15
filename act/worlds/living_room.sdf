@@ -119,7 +119,7 @@
     <!-- Include the act robot model -->
     <include>
         <uri>model://mouse_robot</uri>
-        <pose>-3.00 -6.00 0.12 0 0 0</pose>
+        <pose>-0.50 -2.00 0.06 0 0 0</pose>
     </include>
     <!-- Include the room model -->
     <include>
