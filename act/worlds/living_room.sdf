@@ -1,5 +1,22 @@
 <sdf version='1.7'>
   <world name='default'>
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <plugin
+      filename="gz-sim-physics-system"
+      name="gz::sim::systems::Physics">
+    </plugin>
+    <plugin
+      filename="gz-sim-user-commands-system"
+      name="gz::sim::systems::UserCommands">
+    </plugin>
+    <plugin
+      filename="gz-sim-scene-broadcaster-system"
+      name="gz::sim::systems::SceneBroadcaster">
+    </plugin>
+
     <light name='sun' type='directional'>
       <cast_shadows>1</cast_shadows>
       <pose>0 0 10 0 -0 0</pose>
@@ -18,8 +35,9 @@
         <falloff>0</falloff>
       </spot>
     </light>
+
     <model name='ground_plane'>
-      <static>1</static>
+      <static>true</static>
       <link name='link'>
         <collision name='collision'>
           <geometry>
@@ -35,8 +53,8 @@
             </contact>
             <friction>
               <ode>
-                <mu>100</mu>
-                <mu2>50</mu2>
+                <mu>1.0</mu>
+                <mu2>0.5</mu2>
               </ode>
               <torsional>
                 <ode/>
@@ -119,7 +137,7 @@
     <!-- Include the act robot model -->
     <include>
         <uri>model://mouse_robot</uri>
-        <pose>-0.50 -2.00 0.06 0 0 0</pose>
+        <pose>-0.50 -2.00 0.07 0 0.18 0</pose>
     </include>
     <!-- Include the room model -->
     <include>
