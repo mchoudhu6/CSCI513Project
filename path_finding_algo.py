@@ -3,16 +3,16 @@ from rclpy.node import Node
 from sensor_msgs.msg import LaserScan, Range
 from geometry_msgs.msg import Twist
 
-class AutonomousCatToy:
+class AutonomousCatToy(Node):
     def __init__(self):
-        rclpy.init(args=None)
-        self.node = Node('cat_toy_navigation')
+        super().__init__('cat_toy_navigation')
         
         # Publishers and Subscribers
-        self.cmd_vel_pub = self.node.create_publisher(Twist, '/cmd_vel', 10)
-        self.lidar_sub = self.node.create_subscription(LaserScan, '/lidar', self.lidar_callback, 10)
-        self.height_sensor_sub = self.node.create_subscription(Range, '/height_sensor', self.height_callback, 10)
-        self.logger = self.node.get_logger()
+        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
+        self.lidar_sub = self.create_subscription(LaserScan, '/lidar', self.lidar_callback, 10)
+        self.height_sensor_sub = self.create_subscription(Range, '/height_sensor', self.height_callback, 10)
+        self.logger = self.get_logger()
+        self.timer = self.create_timer(1.0, self.timer_callback)
 
         # Thresholds
         self.obstacle_distance_threshold = 0.5  # Distance to consider an object as an obstacle
@@ -37,6 +37,11 @@ class AutonomousCatToy:
             self.escape_space()
         else:
             self.low_clearance_detected = False
+    
+    def timer_callback(self):
+        if not self.low_clearance_detected:
+            self.logger.info("Moving Forward")
+            self.move_forward()
 
     def avoid_obstacle(self):
         self.logger.info("Obstacle detected, avoiding...")
@@ -52,22 +57,17 @@ class AutonomousCatToy:
             self.cmd_vel_pub.publish(self.twist)
             
     def move_forward(self):
-        self.logger.info("Moving forward")
         self.twist.linear.x = 0.3
         self.twist.angular.z = 0.0
         self.cmd_vel_pub.publish(self.twist)
-
-    def main_loop(self):
-        rate = self.node.create_rate(10)  # 10 Hz
-        while rclpy.ok():
-            if not self.low_clearance_detected:
-                self.move_forward()
-            rate.sleep()
-        self.node.destroy_node()
-        rclpy.shutdown()
+            
+        
 if __name__ == '__main__':
     try:
+        rclpy.init(args=None)
         cat_toy = AutonomousCatToy()
-        cat_toy.main_loop()
+        rclpy.spin(cat_toy)
+        self.node.destroy_node()
+        rclpy.shutdown()
     except rclpy.exceptions.ROSInterruptException:
         pass
