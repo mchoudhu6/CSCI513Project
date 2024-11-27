@@ -225,7 +225,7 @@
             name="gz::sim::systems::DiffDrive">
             <left_joint>left_wheel_joint</left_joint>
             <right_joint>right_wheel_joint</right_joint>
-            <wheel_separation>0.18</wheel_separation>
+            <wheel_separation>0.19</wheel_separation>
             <wheel_radius>0.1</wheel_radius>
             <odom_publish_frequency>10</odom_publish_frequency>
             <topic>cmd_vel</topic>

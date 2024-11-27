@@ -13,4 +13,9 @@ def generate_launch_description():
             cmd=['gz', 'sim', world_file_path],
             output='screen'
         ),
+        Node(
+            package='act',
+            executable='path_finding_algo.py',
+            output='screen'
+        ),
     ])

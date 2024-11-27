@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import LaserScan, Range
@@ -8,9 +9,9 @@ class AutonomousCatToy(Node):
         super().__init__('cat_toy_navigation')
         
         # Publishers and Subscribers
-        self.cmd_vel_pub = self.create_publisher(Twist, '/cmd_vel', 10)
-        self.lidar_sub = self.create_subscription(LaserScan, '/lidar', self.lidar_callback, 10)
-        self.height_sensor_sub = self.create_subscription(Range, '/height_sensor', self.height_callback, 10)
+        self.cmd_vel_pub = self.create_publisher(Twist, "/cmd_vel", 10)
+        self.lidar_sub = self.create_subscription(LaserScan, "/lidar", self.lidar_callback, 10)
+        self.height_sensor_sub = self.create_subscription(Range, "/height_sensor", self.height_callback, 10)
         self.logger = self.get_logger()
         self.timer = self.create_timer(1.0, self.timer_callback)
 
@@ -40,7 +41,6 @@ class AutonomousCatToy(Node):
     
     def timer_callback(self):
         if not self.low_clearance_detected:
-            self.logger.info("Moving Forward")
             self.move_forward()
 
     def avoid_obstacle(self):
@@ -67,7 +67,8 @@ if __name__ == '__main__':
         rclpy.init(args=None)
         cat_toy = AutonomousCatToy()
         rclpy.spin(cat_toy)
-        self.node.destroy_node()
-        rclpy.shutdown()
     except rclpy.exceptions.ROSInterruptException:
         pass
+    finally:
+        cat_toy.destroy_node()
+        rclpy.shutdown()
