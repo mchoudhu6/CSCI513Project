@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="table">
+    <static>true</static>
+    <link name="table_link">
+      <visual name="table_visual">
+        <geometry>
+          <mesh>
+            <uri>model://table/table.stl</uri>
+            <scale>0.022 0.022 0.022</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.7 0.5 0.3 1</ambient>
+          <diffuse>0.7 0.5 0.3 1</diffuse>
+        </material>
+      </visual>
+      <collision name="table_collision">
+        <geometry>
+          <mesh>
+            <uri>model://table/table.stl</uri>
+            <scale>0.022 0.022 0.022</scale>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>

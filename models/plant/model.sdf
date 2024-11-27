@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<sdf version="1.8">
+  <model name="plant">
+    <static>true</static>
+    <link name="plant_link">
+      <visual name="plant_visual">
+        <geometry>
+          <mesh>
+            <uri>model://plant/plant.stl</uri>
+            <scale>0.03 0.03 0.03</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.2 0.4 0.2 1</ambient>
+          <diffuse>0.2 0.4 0.2 1</diffuse>
+        </material>
+      </visual>
+      <collision name="plant_collision">
+        <geometry>
+          <mesh>
+            <uri>model://plant/plant.stl</uri>
+            <scale>0.03 0.03 0.03</scale>
+          </mesh>
+        </geometry>
+      </collision>
+    </link>
+  </model>
+</sdf>
