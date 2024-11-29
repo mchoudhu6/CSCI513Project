@@ -57,18 +57,17 @@ class AutonomousCatToy(Node):
             self.cmd_vel_pub.publish(self.twist)
             
     def move_forward(self):
-        self.twist.linear.x = 0.3
+        self.twist.linear.x = 0.5
         self.twist.angular.z = 0.0
         self.cmd_vel_pub.publish(self.twist)
             
         
 if __name__ == '__main__':
+    rclpy.init(args=None)
+    cat_toy = AutonomousCatToy()
     try:
-        rclpy.init(args=None)
-        cat_toy = AutonomousCatToy()
         rclpy.spin(cat_toy)
     except rclpy.exceptions.ROSInterruptException:
         pass
-    finally:
-        cat_toy.destroy_node()
-        rclpy.shutdown()
+    cat_toy.destroy_node()
+    rclpy.shutdown()

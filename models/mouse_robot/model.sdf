@@ -1,6 +1,11 @@
 <?xml version="1.0" ?>
 <sdf version="1.8">
     <model name='generic_robot' canonical_link='chassis'>
+
+        <frame name="lidar_frame" attached_to='chassis'>
+            <pose>0.8 0 0.5 0 0 0</pose>
+        </frame>
+        
         <!--chassis-->
         <link name="chassis">
         <pose>0 0 0 0 0 1.57</pose>
@@ -38,11 +43,6 @@
             <izz>0.476</izz>
             </inertia>
         </inertial>
-        </link>
-
-         <frame name="lidar_frame" attached_to='chassis'>
-            <pose>0.8 0 0.5 0 0 0</pose>
-        </frame>
 
         <sensor type="lidar" name="lidar">
             <pose relative_to='lidar_frame'>0 0 0 0 0 0</pose>
@@ -72,6 +72,7 @@
             <always_on>1</always_on>
             <visualize>true</visualize>
         </sensor>
+        </link>
 
         <!-- Left wheel-->
         <link name='left_wheel'>

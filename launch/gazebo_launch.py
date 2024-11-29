@@ -17,5 +17,5 @@ def generate_launch_description():
             package='act',
             executable='path_finding_algo.py',
             output='screen'
-        ),
+        )
     ])

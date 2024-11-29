@@ -43,6 +43,9 @@ After building, source the workspace:
 5. **Launch the Simulation**
 `ros2 launch act gazebo_launch.py`
 
+6. **Open 2nd Terminal and Launch the Bridge**
+`ros2 run ros_gz_bridge parameter_bridge --ros-args -p config_file:=$(echo $HOME)/ros2_ws/src/act/bridge.yaml`
+
 ## Current Understanding of World and Model Building with Gazebo. 
 
 When modifying models, worlds, or other source files, follow this cycle to reflect updates in Gazebo:
