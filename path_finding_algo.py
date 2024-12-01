@@ -16,20 +16,23 @@ class AutonomousCatToy(Node):
         self.timer = self.create_timer(1.0, self.timer_callback)
 
         # Thresholds
-        self.obstacle_distance_threshold = 0.5  # Distance to consider an object as an obstacle
+        self.obstacle_distance_threshold = 2.5  # Distance to consider an object as an obstacle
         self.height_threshold = 0.3  # Equivalent to 1 foot (around 30cm)
-        
+
         # Movement and state variables
         self.twist = Twist()
         self.low_clearance_detected = False
+        self.obstacle_ahead = False
         self.is_trapped = False
 
     def lidar_callback(self, data):
-        self.logger.info("Received lidar data")
         # Check for obstacles in front
         front_distances = data.ranges[len(data.ranges)//2 - 10 : len(data.ranges)//2 + 10]
         if min(front_distances) < self.obstacle_distance_threshold:
+            self.obstacle_ahead = True
             self.avoid_obstacle()
+        else:
+            self.obstacle_ahead = False
 
     def height_callback(self, data):
         # Check if overhead clearance is less than threshold
@@ -40,13 +43,13 @@ class AutonomousCatToy(Node):
             self.low_clearance_detected = False
     
     def timer_callback(self):
-        if not self.low_clearance_detected:
+        if not self.low_clearance_detected and not self.obstacle_ahead:
             self.move_forward()
 
     def avoid_obstacle(self):
         self.logger.info("Obstacle detected, avoiding...")
         self.twist.linear.x = 0.0
-        self.twist.angular.z = 0.5  # Rotate to find a clear path
+        self.twist.angular.z = 1.5  # Rotate to find a clear path
         self.cmd_vel_pub.publish(self.twist)
 
     def escape_space(self):
@@ -57,7 +60,7 @@ class AutonomousCatToy(Node):
             self.cmd_vel_pub.publish(self.twist)
             
     def move_forward(self):
-        self.twist.linear.x = 0.5
+        self.twist.linear.x = 0.3
         self.twist.angular.z = 0.0
         self.cmd_vel_pub.publish(self.twist)
             
