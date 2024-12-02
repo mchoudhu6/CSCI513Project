@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<sdf version="1.8">
+<sdf version="1.7">
     <model name='generic_robot' canonical_link='chassis'>
 
         <frame name="lidar_frame" attached_to='chassis'>
@@ -44,8 +44,9 @@
             </inertia>
         </inertial>
 
-        <sensor type="gpu_lidar" name="lidar">
-            <pose relative_to='lidar_frame'>0 0 0 0 0 0</pose>
+        <!-- LiDAR Sensor -->
+        <sensor type="ray" name="lidar_sensor">
+            <pose>0 0 0.3 0 0 0</pose>
             <topic>lidar</topic>
             <update_rate>10</update_rate>
             <ray>
@@ -57,10 +58,10 @@
                         <max_angle>1.396263</max_angle>
                     </horizontal>
                     <vertical>
-                        <samples>1</samples>
-                        <resolution>0.01</resolution>
-                        <min_angle>0</min_angle>
-                        <max_angle>0</max_angle>
+                        <samples>20</samples> <!-- Number of vertical beams -->
+                        <resolution>1</resolution>
+                        <min_angle>0</min_angle> <!-- Horizontal direction -->
+                        <max_angle>1.5708</max_angle> <!-- 90° upward -->
                     </vertical>
                 </scan>
                 <range>
@@ -69,8 +70,16 @@
                     <resolution>0.01</resolution>
                 </range>
             </ray>
-            <always_on>1</always_on>
-            <visualize>true</visualize>
+            <plugin name="gazebo_ros_ray_sensor" filename="libgazebo_ros_ray_sensor.so">
+                <topic_name>lidar</topic_name>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <min_angle>-1.57</min_angle>  <!-- 90 degrees left -->
+                <max_angle>1.57</max_angle>   <!-- 90 degrees right -->
+                <update_rate>30.0</update_rate>
+                <ray_count>360</ray_count>    <!-- Resolution -->
+                <range_min>0.1</range_min>
+                <range_max>10.0</range_max>
+            </plugin>
         </sensor>
         </link>
 
@@ -88,7 +97,7 @@
                     <izz>0.08</izz>
                 </inertia>
             </inertial>
-            <visual name='visual'>
+            <visual name='left_wheel_visual'>
                 <geometry>
                     <cylinder>
                         <radius>0.1</radius>
@@ -101,7 +110,7 @@
                     <specular>0.1 0.1 0.1 1</specular>
                 </material>
             </visual>
-            <collision name='collision'>
+            <collision name='left_wheel_collision'>
                 <geometry>
                     <cylinder>
                         <radius>0.1</radius>
@@ -125,7 +134,7 @@
                     <izz>0.08</izz>
                 </inertia>
             </inertial>
-            <visual name='visual'>
+            <visual name='right_wheel_visual'>
                 <geometry>
                     <cylinder>
                         <radius>0.1</radius>
@@ -138,7 +147,7 @@
                     <specular>0.1 0.1 0.1 1</specular>
                 </material>
             </visual>
-            <collision name='collision'>
+            <collision name='right_wheel_collision'>
                 <geometry>
                     <cylinder>
                         <radius>0.1</radius>
@@ -165,7 +174,7 @@
                     <izz>0.016</izz>
                 </inertia>
             </inertial>
-            <visual name='visual'>
+            <visual name='caster_visual'>
                 <geometry>
                     <sphere>
                         <radius>0.04</radius>
@@ -177,7 +186,7 @@
                     <specular>0.1 0.1 0.1 1</specular>
                 </material>
             </visual>
-            <collision name='collision'>
+            <collision name='caster_collision'>
                 <geometry>
                     <sphere>
                         <radius>0.04</radius>
@@ -221,53 +230,14 @@
             <child>caster</child>
         </joint>
 
-        <plugin
-            filename="gz-sim-diff-drive-system"
-            name="gz::sim::systems::DiffDrive">
+        <plugin name="diff_drive_controller" filename="libgazebo_ros_diff_drive.so">
             <left_joint>left_wheel_joint</left_joint>
             <right_joint>right_wheel_joint</right_joint>
             <wheel_separation>0.19</wheel_separation>
-            <wheel_radius>0.1</wheel_radius>
+            <wheel_radius>0.05</wheel_radius>
+            <wheel_diameter>0.1</wheel_diameter>
             <odom_publish_frequency>10</odom_publish_frequency>
             <topic>cmd_vel</topic>
-        </plugin>
-
-        <!-- Moving Based on Key Press (WASD)-->
-        <plugin filename="gz-sim-triggered-publisher-system"
-                name="gz::sim::systems::TriggeredPublisher">
-            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">87</match>
-            </input>
-            <output type="gz.msgs.Twist" topic="/cmd_vel">
-                linear: {x: 0.5}, angular: {z: 0.0}
-            </output>   
-        </plugin>
-        <plugin filename="gz-sim-triggered-publisher-system"
-                name="gz::sim::systems::TriggeredPublisher">
-            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">83</match>
-            </input>
-            <output type="gz.msgs.Twist" topic="/cmd_vel">
-                linear: {x: -0.5}, angular: {z: 0.0}
-            </output> 
-        </plugin>
-        <plugin filename="gz-sim-triggered-publisher-system"
-                name="gz::sim::systems::TriggeredPublisher">
-            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">65</match>
-            </input>
-            <output type="gz.msgs.Twist" topic="/cmd_vel">
-                linear: {x: 0.0}, angular: {z: 0.5}
-            </output>
-        </plugin>
-        <plugin filename="gz-sim-triggered-publisher-system"
-                name="gz::sim::systems::TriggeredPublisher">
-            <input type="gz.msgs.Int32" topic="/keyboard/keypress">
-                <match field="data">68</match>
-            </input>
-            <output type="gz.msgs.Twist" topic="/cmd_vel">
-                linear: {x: 0.0}, angular: {z: -0.5}
-            </output>
         </plugin>
     </model>
 </sdf>
