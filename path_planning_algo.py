@@ -21,13 +21,14 @@ class SimpleCatToy(Node):
         self.obstacle_detected = False
         self.left_blocked = False
         self.right_blocked = False
+        self.low_clearance = False
         self.state = "MOVING_FORWARD"  # Robot's current state
         
         # Timer for movement updates
         self.timer = self.create_timer(0.1, self.timer_callback)
 
     def lidar_callback(self, data):
-        """Processes LiDAR data and checks for obstacles."""
+        """Processes LiDAR data and checks for obstacles and clearance."""
         # Divide LiDAR data into sectors (front, left, right)
         front_distance = min(data.ranges[len(data.ranges) // 3: 2 * len(data.ranges) // 3], default=float('inf'))
         left_distance = min(data.ranges[: len(data.ranges) // 3], default=float('inf'))
@@ -40,16 +41,40 @@ class SimpleCatToy(Node):
         self.obstacle_detected = front_distance < 0.5
         self.left_blocked = left_distance < 0.5
         self.right_blocked = right_distance < 0.5
+        
+        # Check for low clearance
+        self.check_clearance(data)
+
+    def check_clearance(self, data):
+        """Checks if the robot is in a low-clearance space."""
+        # Assuming vertical beams are at the beginning of `data.ranges` (customize as needed)
+        vertical_ranges = data.ranges[:10]  # First few beams point upwards
+        min_clearance = min(vertical_ranges, default=float('inf'))
+        
+        self.low_clearance = min_clearance < 0.2286  # 9 inches in meters
+        if self.low_clearance:
+            self.get_logger().info("Low clearance detected! Switching to REVERSING state.")
+            self.state = "REVERSING"
 
     def timer_callback(self):
         """Handle robot movement based on state."""
         self.get_logger().info(f"Current State: {self.state}")
         if self.state == "MOVING_FORWARD":
-            if self.obstacle_detected:
+            if self.low_clearance:
+                self.state = "REVERSING"
+                self.reverse()
+            elif self.obstacle_detected:
                 self.state = "CHOOSING_DIRECTION"
                 self.stop_and_turn()
             else:
                 self.move_forward()
+        elif self.state == "REVERSING":
+            # Allow time to reverse and transition back to choosing direction
+            self.state = "CHOOSING_DIRECTION"
+            self.stop_and_turn()
+        elif self.state == "CHOOSING_DIRECTION":
+            if not self.low_clearance:
+                self.stop_and_turn()
 
     def move_forward(self):
         """Command the robot to move forward."""
@@ -85,28 +110,13 @@ class SimpleCatToy(Node):
         self.twist.linear.x = 0.0
         self.twist.angular.z = direction * 3.0  # Adjust turning speed
         self.cmd_vel_pub.publish(self.twist)
-        # Allow time to turn
-        self.create_timer(30.0, self.finish_turn)
-
-    def finish_turn(self):
-        """Finish the turn and return to moving forward."""
-        self.get_logger().info("Finished turning. Moving forward.")
-        self.state = "MOVING_FORWARD"
-        self.move_forward()
 
     def reverse(self):
         """Reverse the robot slightly."""
+        self.get_logger().info("Reversing due to low clearance.")
         self.twist.linear.x = -0.2
         self.twist.angular.z = 0.0
         self.cmd_vel_pub.publish(self.twist)
-        # Allow time to reverse
-        self.create_timer(1.0, self.finish_reverse)  # 1 second reverse
-
-    def finish_reverse(self):
-        """Finish reversing and choose a new direction."""
-        self.get_logger().info("Finished reversing. Choosing a new direction.")
-        self.state = "CHOOSING_DIRECTION"
-        self.stop_and_turn()
 
 
 def main():
